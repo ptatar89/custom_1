@@ -1,0 +1,49 @@
+version: '2'
+
+services:
+  api_db:
+    container_name: api_db
+    image: mysql
+    command: ["--default-authentication-plugin=mysql_native_password"]
+    volumes:
+    - "./.data/api_db:/var/lib/mysql"
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+  panel_db:
+    container_name: panel_db
+    image: mysql
+    command: ["--default-authentication-plugin=mysql_native_password"]
+    volumes:
+    - "./.data/panel_db:/var/lib/mysql"
+    environment:
+      - MYSQL_ROOT_PASSWORD=${PANEL_MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${PANEL_MYSQL_DATABASE}
+      - MYSQL_USER=${PANEL_MYSQL_USER}
+      - MYSQL_PASSWORD=${PANEL_MYSQL_PASSWORD}
+  php:
+    container_name: php
+    extra_hosts:
+      - api.local:${MACHINE_IP}
+      - panel.local:${MACHINE_IP}
+    build:
+      context: .
+      dockerfile: docker/php7-fpm/Dockerfile
+      args:
+        TIMEZONE: ${TIMEZONE}
+    volumes:
+      - ./logs/api:/var/www/html/api/var/logs
+      - ./logs/panel:/var/www/html/panel/var/logs
+  nginx:
+    container_name: nginx
+    build:
+      context: .
+      dockerfile: docker/nginx/Dockerfile
+    ports:
+      - 80:80
+    volumes_from:
+      - php
+    volumes:
+      - ./logs/nginx/:/var/log/nginx

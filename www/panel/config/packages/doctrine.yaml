@@ -1,0 +1,24 @@
+doctrine:
+    dbal:
+        driver_class: "Circle\\DoctrineRestDriver\\Driver"
+        host:         "%env(resolve:default_api_url)%"
+        port:         "%env(resolve:default_api_port)%"
+        user:         "%env(resolve:default_api_username)%"
+        password:     "%env(resolve:default_api_password)%"
+        options:
+            format:               "json"
+            authenticator_class:  "HttpAuthentication"
+            pagination_as_query: true
+            CURLOPT_HEADER: true
+
+    orm:
+        auto_generate_proxy_classes: true
+        naming_strategy: doctrine.orm.naming_strategy.default
+        auto_mapping: true
+        mappings:
+            App:
+                is_bundle: false
+                type: annotation
+                dir: '%kernel.project_dir%/src/Entity'
+                prefix: 'App\Entity'
+                alias: App

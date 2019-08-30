@@ -1,0 +1,21 @@
+security:
+    encoders:
+        Symfony\Component\Security\Core\User\User:
+            algorithm: bcrypt
+            cost: 12
+    providers:
+        in_memory:
+            memory:
+                users:
+                    api:
+                        password: $2y$12$L5njdlk6eyJJgvzB4/PP8ukFP5r5wID26I4h.jktsEr2GNM2V2lze
+                        roles: ''
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        main:
+            anonymous: true
+            http_basic: ~
+    access_control:
+         - { path: ^/api/*, roles: IS_AUTHENTICATED_FULLY }

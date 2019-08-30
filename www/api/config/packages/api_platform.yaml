@@ -1,0 +1,12 @@
+api_platform:
+    name_converter: app.name_converter
+    allow_plain_identifiers: true
+    mapping:
+        paths: ['%kernel.project_dir%/src/Entity']
+    formats:
+
+        json:
+            mime_types: ['application/json', 'application/x-www-form-urlencoded']
+
+        html:
+            mime_types: ['text/html']
